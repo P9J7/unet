@@ -125,7 +125,7 @@ def rawUnet(pretrained_weights=None, input_size=(256, 256, 1)):
                    kernel_initializer=my_init)(conv5)
     # drop5 = Dropout(0.5)(conv5)
     my_init2 = myInit2(1024)
-    up6 = Conv2D(512, 2, activation='relu', padding='valid', kernel_initializer=my_init2)(
+    up6 = Conv2D(512, 1, activation='relu', padding='valid', kernel_initializer=my_init2)(
         UpSampling2D(size=(2, 2), interpolation='bilinear')(conv5))
     merge6 = concatenate([Cropping2D(((4, 4), (4, 4)))(conv4), up6], axis=3)
     my_init = myInit(512)
@@ -136,23 +136,23 @@ def rawUnet(pretrained_weights=None, input_size=(256, 256, 1)):
     my_init2 = myInit2(512)
     up7 = Conv2D(256, 2, activation='relu', padding='valid', kernel_initializer=my_init2)(
         UpSampling2D(size=(2, 2), interpolation='bilinear')(conv6))
-    merge7 = concatenate([Cropping2D((16, 16), (16, 16))(conv3), up7], axis=3)
+    merge7 = concatenate([Cropping2D(((16, 16), (16, 16)))(conv3), up7], axis=3)
     my_init = myInit(256)
     conv7 = Conv2D(256, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         merge7)
     conv7 = Conv2D(256, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv7)
     my_init2 = myInit2(256)
-    up8 = Conv2D(128, 2, activation='relu', padding='valid', kernel_initializer=my_init2())(
+    up8 = Conv2D(128, 2, activation='relu', padding='valid', kernel_initializer=my_init2)(
         UpSampling2D(size=(2, 2), interpolation='bilinear')(conv7))
-    merge8 = concatenate([Cropping2D((40, 40), (40, 40))(conv2), up8], axis=3)
+    merge8 = concatenate([Cropping2D(((40, 40), (40, 40)))(conv2), up8], axis=3)
     my_init = myInit(128)
     conv8 = Conv2D(128, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         merge8)
     conv8 = Conv2D(128, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv8)
     my_init2 = myInit2(128)
-    up9 = Conv2D(64, 2, activation='relu', padding='valid', kernel_initializer=my_init())(
+    up9 = Conv2D(64, 2, activation='relu', padding='valid', kernel_initializer=my_init2)(
         UpSampling2D(size=(2, 2), interpolation='bilinear')(conv8))
     merge9 = concatenate([Cropping2D(((88, 88), (88, 88)))(conv1), up9], axis=3)
     my_init = myInit(64)
