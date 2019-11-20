@@ -96,26 +96,26 @@ def rawUnet(pretrained_weights=None, input_size=(256, 256, 1)):
     my_init = myInit(64)
     conv1 = Conv2D(64, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv1)
-    pool1 = MaxPooling2D(pool_size=(2, 2))(conv1)
+    pool1 = MaxPooling2D(pool_size=(2, 2), strides=2)(conv1)
     conv2 = Conv2D(128, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         pool1)
     my_init = myInit(128)
     conv2 = Conv2D(128, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv2)
-    pool2 = MaxPooling2D(pool_size=(2, 2))(conv2)
+    pool2 = MaxPooling2D(pool_size=(2, 2), strides=2)(conv2)
     conv3 = Conv2D(256, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         pool2)
     my_init = myInit(256)
     conv3 = Conv2D(256, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv3)
-    pool3 = MaxPooling2D(pool_size=(2, 2))(conv3)
+    pool3 = MaxPooling2D(pool_size=(2, 2), strides=2)(conv3)
     conv4 = Conv2D(512, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         pool3)
     my_init = myInit(512)
     conv4 = Conv2D(512, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv4)
 
-    pool4 = MaxPooling2D(pool_size=(2, 2))(conv4)
+    pool4 = MaxPooling2D(pool_size=(2, 2), strides=2)(conv4)
     drop4 = Dropout(0.5)(pool4)
 
     conv5 = Conv2D(1024, 3, activation='relu', padding='valid', kernel_initializer=my_init)(
