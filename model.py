@@ -388,7 +388,7 @@ def rawUnet(pretrained_weights=None, input_size=(572, 572, 1)):
     conv9 = Conv2D(2, 1, activation='relu', padding='valid', kernel_initializer=my_init)(
         conv9)
     # ????
-    conv10 = Conv2D(1, 1, activation='softmax')(conv9)
+    conv10 = Conv2D(1, 1, activation='sigmoid')(conv9)
 
     model = Model(input=inputs, output=conv10)
     sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.99, nesterov=True)

@@ -1,6 +1,6 @@
 from __future__ import print_function
 from keras.preprocessing.image import ImageDataGenerator
-import numpy as np 
+import numpy as np
 import os
 import glob
 import skimage.io as io
@@ -54,15 +54,15 @@ def overlapData(img,target_size=(572, 572)):
     tailImg[tailSize:img.shape[0] + tailSize, tailSize:img.shape[0] + tailSize] = img
     # left
     reversedCol = np.arange(tailSize - 1, -1, -1)
-    tailImg[tailSize:img.shape[0] + tailSize, img.shape[0] + tailSize:] = img[:, reversedCol]
+    tailImg[tailSize:img.shape[0] + tailSize, :tailSize] = img[:, reversedCol]
     # right
     reversedCol = np.arange(img.shape[1] - 1, img.shape[1] - 1 - tailSize, -1)
-    tailImg[tailSize:img.shape[0] + tailSize, :tailSize] = img[:, reversedCol]
+    tailImg[tailSize:img.shape[0] + tailSize, img.shape[0] + tailSize:] = img[:, reversedCol]
     # up
-    reversedRow = np.arange(tailSize - 1, -1, -1)
+    reversedRow = np.arange(tailSize * 2 - 1, tailSize - 1, -1)
     tailImg[0:tailSize, :] = tailImg[reversedRow, :]
     # down
-    reversedRow = np.arange(img.shape[0] + tailSize, img.shape[0], -1)
+    reversedRow = np.arange(img.shape[0] + tailSize - 1, img.shape[0] - 1, -1)
     tailImg[img.shape[1] + tailSize:, :] = tailImg[reversedRow, :]
     tailImg = np.reshape(tailImg, (1,) + tailImg.shape + (1,))
     return tailImg
@@ -129,7 +129,7 @@ def overlapTrainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dic
         classes = [mask_folder],
         class_mode = None,
         color_mode = mask_color_mode,
-        target_size = (388, 388),
+        target_size = target_size,
         batch_size = batch_size,
         save_to_dir = save_to_dir,
         save_prefix  = mask_save_prefix,
@@ -139,6 +139,7 @@ def overlapTrainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dic
         img,mask = adjustData(img,mask,flag_multi_class,num_class)
         img,mask = overlapData(img),mask
         yield img,mask
+        saveTrainResult("data/membrane/train/overlapTrain", img, mask)
 
 
 def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_class = False,as_gray = True):
@@ -148,6 +149,7 @@ def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_cl
         img = trans.resize(img,target_size)
         img = np.reshape(img,img.shape+(1,)) if (not flag_multi_class) else img
         img = np.reshape(img,(1,)+img.shape)
+        saveResult("data/membrane/train/unetTest", img)
         yield img
 
 
@@ -161,19 +163,19 @@ def overlapTestGenerator(test_path,num_image=30, target_size=(572, 572), flag_mu
         tailImg[tailSize:img.shape[0] + tailSize, tailSize:img.shape[0] + tailSize] = img
         # left
         reversedCol = np.arange(tailSize - 1, -1, -1)
-        tailImg[tailSize:img.shape[0] + tailSize, img.shape[0] + tailSize:] = img[:, reversedCol]
+        tailImg[tailSize:img.shape[0] + tailSize, :tailSize] = img[:, reversedCol]
         # right
         reversedCol = np.arange(img.shape[1] - 1, img.shape[1] - 1 - tailSize, -1)
-        tailImg[tailSize:img.shape[0] + tailSize, :tailSize] = img[:, reversedCol]
+        tailImg[tailSize:img.shape[0] + tailSize, img.shape[0] + tailSize:] = img[:, reversedCol]
         # up
-        reversedRow = np.arange(tailSize - 1, -1, -1)
+        reversedRow = np.arange(tailSize*2 - 1, tailSize - 1, -1)
         tailImg[0:tailSize, :] = tailImg[reversedRow, :]
         # down
-        reversedRow = np.arange(img.shape[0] + tailSize, img.shape[0], -1)
+        reversedRow = np.arange(img.shape[0] + tailSize - 1, img.shape[0] - 1, -1)
         tailImg[img.shape[1] + tailSize:, :] = tailImg[reversedRow, :]
         tailImg = np.reshape(tailImg, tailImg.shape+(1,)) if (not flag_multi_class) else tailImg
         tailImg = np.reshape(tailImg, (1,)+tailImg.shape)
-        print(tailImg)
+        saveResult("data/membrane/train/overlapTest", tailImg)
         yield tailImg
 
 
@@ -205,5 +207,14 @@ def labelVisualize(num_class,color_dict,img):
 
 def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
     for i,item in enumerate(npyfile):
-        img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,:]
+        img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
+        # print(item[:, :, 0])
         io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)
+
+
+def saveTrainResult(save_path,img,mask):
+    img = img[0,:, :, 0]
+    mask = mask[0,:, :, 0]
+    i = np.random.randint(10000)
+    io.imsave(os.path.join(save_path,"%d_train.png"%i),img)
+    io.imsave(os.path.join(save_path, "%d_mask.png" % i), mask)
