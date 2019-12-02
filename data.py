@@ -5,6 +5,7 @@ import os
 import glob
 import skimage.io as io
 import skimage.transform as trans
+import keras.preprocessing.image as kpi
 
 Sky = [128,128,128]
 Building = [128,0,0]
@@ -155,7 +156,11 @@ def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_cl
 
 def overlapTestGenerator(test_path,num_image=30, target_size=(572, 572), flag_multi_class=False, as_gray=True):
     for i in range(num_image):
-        img = io.imread(os.path.join(test_path,"%d.png"%i),as_gray = as_gray)
+        # img = io.imread(os.path.join(test_path,"%d.png"%i),as_gray = as_gray)
+        img_path = os.path.join(test_path,"%d.png"%i)
+        img = kpi.load_img(img_path, color_mode="grayscale", target_size=(388, 388))
+        img = kpi.img_to_array(img, 'channels_last')
+        img = img[:, :, 0]
         img = img / 255
         tailSize = (target_size[0] - img.shape[0]) // 2
         # print(tailSize)
@@ -175,7 +180,7 @@ def overlapTestGenerator(test_path,num_image=30, target_size=(572, 572), flag_mu
         tailImg[img.shape[1] + tailSize:, :] = tailImg[reversedRow, :]
         tailImg = np.reshape(tailImg, tailImg.shape+(1,)) if (not flag_multi_class) else tailImg
         tailImg = np.reshape(tailImg, (1,)+tailImg.shape)
-        # saveResult("data/membrane/train/overlapTest", tailImg)
+        saveTrainResult("data/membrane/train/overlapTest", tailImg)
         yield tailImg
 
 
@@ -212,9 +217,10 @@ def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
         io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)
 
 
-def saveTrainResult(save_path,img,mask):
+def saveTrainResult(save_path,img,mask=None):
     img = img[0,:, :, 0]
-    mask = mask[0,:, :, 0]
     i = np.random.randint(10000)
-    io.imsave(os.path.join(save_path,"%d_train.png"%i),img)
-    io.imsave(os.path.join(save_path, "%d_mask.png" % i), mask)
+    io.imsave(os.path.join(save_path, "%d_train.png" % i), img)
+    if (mask != None):
+        mask = mask[0, :, :, 0]
+        io.imsave(os.path.join(save_path, "%d_mask.png" % i), mask)
