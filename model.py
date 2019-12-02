@@ -346,9 +346,9 @@ def rawUnet(pretrained_weights=None, input_size=(572, 572, 1)):
                    kernel_initializer='he_normal')(conv5)
     # drop5 = Dropout(0.5)(conv5)
     my_init2 = myInit2(1024)
-    up6 = Conv2D(512, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=(2, 2))(conv5))
-    # up6 = Conv2DTranspose(512, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv5)
+    # up6 = Conv2D(512, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+    #     UpSampling2D(size=(2, 2))(conv5))
+    up6 = Conv2DTranspose(512, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv5)
     merge6 = concatenate([Cropping2D(((4, 4), (4, 4)))(conv4), up6], axis=3)
     my_init = myInit(512)
     conv6 = Conv2D(512, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
@@ -356,9 +356,9 @@ def rawUnet(pretrained_weights=None, input_size=(572, 572, 1)):
     conv6 = Conv2D(512, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
         conv6)
     my_init2 = myInit2(512)
-    up7 = Conv2D(256, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=(2, 2))(conv6))
-    # up7 = Conv2DTranspose(256, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv6)
+    # up7 = Conv2D(256, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+    #     UpSampling2D(size=(2, 2))(conv6))
+    up7 = Conv2DTranspose(256, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv6)
     merge7 = concatenate([Cropping2D(((16, 16), (16, 16)))(conv3), up7], axis=3)
     my_init = myInit(256)
     conv7 = Conv2D(256, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
@@ -366,9 +366,9 @@ def rawUnet(pretrained_weights=None, input_size=(572, 572, 1)):
     conv7 = Conv2D(256, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
         conv7)
     my_init2 = myInit2(256)
-    up8 = Conv2D(128, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=(2, 2))(conv7))
-    # up8 = Conv2DTranspose(128, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv7)
+    # up8 = Conv2D(128, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+    #     UpSampling2D(size=(2, 2))(conv7))
+    up8 = Conv2DTranspose(128, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv7)
     merge8 = concatenate([Cropping2D(((40, 40), (40, 40)))(conv2), up8], axis=3)
     my_init = myInit(128)
     conv8 = Conv2D(128, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
@@ -376,9 +376,9 @@ def rawUnet(pretrained_weights=None, input_size=(572, 572, 1)):
     conv8 = Conv2D(128, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
         conv8)
     my_init2 = myInit2(128)
-    up9 = Conv2D(64, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
-        UpSampling2D(size=(2, 2))(conv8))
-    # up9 = Conv2DTranspose(64, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv8)
+    # up9 = Conv2D(64, 2, activation='relu', padding='same', kernel_initializer='he_normal')(
+    #     UpSampling2D(size=(2, 2))(conv8))
+    up9 = Conv2DTranspose(64, kernel_size=(2, 2), strides=(2, 2), kernel_initializer='he_normal')(conv8)
     merge9 = concatenate([Cropping2D(((88, 88), (88, 88)))(conv1), up9], axis=3)
     my_init = myInit(64)
     conv9 = Conv2D(64, 3, activation='relu', padding='valid', kernel_initializer='he_normal')(
