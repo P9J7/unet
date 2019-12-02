@@ -139,7 +139,7 @@ def overlapTrainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dic
         img,mask = adjustData(img,mask,flag_multi_class,num_class)
         img,mask = overlapData(img),mask
         yield img,mask
-        saveTrainResult("data/membrane/train/overlapTrain", img, mask)
+        # saveTrainResult("data/membrane/train/overlapTrain", img, mask)
 
 
 def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_class = False,as_gray = True):
@@ -149,7 +149,7 @@ def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_cl
         img = trans.resize(img,target_size)
         img = np.reshape(img,img.shape+(1,)) if (not flag_multi_class) else img
         img = np.reshape(img,(1,)+img.shape)
-        saveResult("data/membrane/train/unetTest", img)
+        # saveResult("data/membrane/train/unetTest", img)
         yield img
 
 
@@ -175,7 +175,7 @@ def overlapTestGenerator(test_path,num_image=30, target_size=(572, 572), flag_mu
         tailImg[img.shape[1] + tailSize:, :] = tailImg[reversedRow, :]
         tailImg = np.reshape(tailImg, tailImg.shape+(1,)) if (not flag_multi_class) else tailImg
         tailImg = np.reshape(tailImg, (1,)+tailImg.shape)
-        saveResult("data/membrane/train/overlapTest", tailImg)
+        # saveResult("data/membrane/train/overlapTest", tailImg)
         yield tailImg
 
 
