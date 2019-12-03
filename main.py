@@ -2,7 +2,7 @@ from model import *
 from data import *
 import os
 import keras as K
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 data_gen_args = dict(rotation_range=0.2,
