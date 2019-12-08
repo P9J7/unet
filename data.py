@@ -180,7 +180,7 @@ def overlapTestGenerator(test_path,num_image=30, target_size=(572, 572), flag_mu
         tailImg[img.shape[1] + tailSize:, :] = tailImg[reversedRow, :]
         tailImg = np.reshape(tailImg, tailImg.shape+(1,)) if (not flag_multi_class) else tailImg
         tailImg = np.reshape(tailImg, (1,)+tailImg.shape)
-        saveTrainResult("data/membrane/train/overlapTest", tailImg)
+        # saveTrainResult("data/membrane/train/overlapTest", tailImg)
         yield tailImg
 
 
